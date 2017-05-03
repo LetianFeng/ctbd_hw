@@ -1,5 +1,7 @@
 target/
+input/
 output/
 .idea/
 .settings/
 hadoop.iml
+.pdf
