@@ -4,4 +4,4 @@ output/
 .idea/
 .settings/
 hadoop.iml
-.pdf
+*.pdf

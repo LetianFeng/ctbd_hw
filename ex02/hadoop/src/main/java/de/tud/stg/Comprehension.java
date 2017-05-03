@@ -20,6 +20,7 @@ public class Comprehension {
         private Text word = new Text();
         private Text file = new Text();
 
+        // map word to the file which contains them
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             FileSplit fileSplit = (FileSplit)context.getInputSplit();
@@ -37,6 +38,7 @@ public class Comprehension {
     public static class InvertedReducer extends Reducer<Text, Text, Text, Text> {
         private Text result = new Text();
 
+        // result is key-value pairs, in which a key is a word and a value is a list of file names, which contain the key word
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             StringBuilder sb = new StringBuilder();
@@ -54,6 +56,7 @@ public class Comprehension {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
         Job job = Job.getInstance(conf, "inverted index");
         job.setJarByClass(Comprehension.class);
         job.setMapperClass(TokenizerMapper.class);
@@ -61,8 +64,10 @@ public class Comprehension {
         job.setReducerClass(InvertedReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
+
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
